@@ -6,7 +6,7 @@
 # Programeur: Marwan el Morabet; Contact: marwanelmorabet@gmail.com
 
 # Kiezen van de juiste working directory
-setwd("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Geobrain Eind/Data en Scripts")
+setwd("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Geobrain/Scripts/Def")
 
 # Runnen van de tweede script
 source("3.CPT_Avg_Feat_Imp.R")

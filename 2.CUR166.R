@@ -6,7 +6,7 @@
 # Programeur: Marwan el Morabet; Contact: marwanelmorabet@gmail.com
 
 # Kiezen van de juiste working directory
-setwd("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Geobrain Eind/Data en Scripts")
+setwd("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Geobrain/Scripts/Def")
 
 # Laden van prerequisits
 # Runnen van de eerste script
@@ -17,7 +17,12 @@ library(ggplot2)
 library(ggthemes)
 library(plotly)
 library(RColorBrewer)
+# library(ggpmisc)
+# library(ggpubr)
+# library(PerformanceAnalytics)
  library(corrplot)
+# library(BBmisc)
+# library(randomForest)
 
 # CUR 166 damwand trillingsprognose in een functie
 CUR166_Damwand_Trillingsprognose <- function(Bodemprofiel = "Amsterdam", straal = 8, slagkracht = 900, percentage = 95,  statement = FALSE) {
@@ -87,7 +92,6 @@ lange_damwand <- filter(Trilling_def, Issmall == FALSE) %>% arrange(fout_factor)
 #### Maken van statistische berkeningen ####
 # Berekenen van spearman ranked correlatie over datasets
 CUR_COR <- cor(Trilling_def$Vcur, Trilling_def$R0031_VTOP, method = "spearman")
-CUR_COR <- cor(Trilling_def$Vcur, Trilling_def$R0031_VTOP)
 CUR_COR14 <- cor(korte_damwand$R0031_VTOP, korte_damwand$Vcur, method = "spearman")
 CUR_COR15 <- cor(lange_damwand$R0031_VTOP, lange_damwand$Vcur, method = "spearman")
 
@@ -107,8 +111,9 @@ RMSE_kort <- sqrt(mean(korte_damwand$Verschil^2))
 RMSE_lang <- sqrt(mean(lange_damwand$Verschil^2))
 
 # Visualiseren van nauwkeurigheid CUR 166 zonder 14 meter onderscheiding (figuur 11)
-ggplot(Trilling_def, aes(x=Vcur, y=R0031_VTOP)) + geom_point(size =2, shape = 3) + 
-  geom_abline(slope = 1, color = "red", size = 1.3) + xlab("Trilsnelheid Volgens het CUR 166 model") + ylab("Gemeten top snelheid") + 
+ggplot() +
+  geom_point(aes(x=Trilling_def$Vcur, y=Trilling_def$R0031_VTOP), size = 2, shape = 3) + xlab("Trilsnelheid Volgens het CUR 166 model") + ylab("Gemeten top snelheid") + 
+  geom_abline(slope = 1, color = "red", size = 1.3)  + ylab("Gemeten top snelheid") +
   theme_light() +  xlim(0, 11) + ylim(0, 12) +   theme(
     legend.title = element_blank(),
     axis.title.x = element_text(size=14, face="bold"),
@@ -121,7 +126,7 @@ ggplot(Trilling_def, aes(x=Verschil, fill = Ispositive)) +
   theme(legend.position = c(0.3, 0.58)) +
   scale_fill_discrete(labels=c("Meting hoger dan prognose", "Prognose hoger dan meting"))
 
-# Nul Model Residuen (Figuur 13)
+# Null Model Residuen (Figuur 13)
 verschil_nulmodel <- data.frame(a =  mean(Trilling_def$R0031_VTOP ) - Trilling_def$R0031_VTOP) %>%
   mutate(Ispositive = a >= 0)
 MAE_nul  <- mean(abs(verschil_nulmodel$a))
@@ -133,11 +138,12 @@ ggplot(verschil_nulmodel, aes(x=a, fill = Ispositive)) +
   scale_fill_discrete(labels=c("Meting hoger dan prognose", "Prognose hoger dan meting"))
 
 # Verschil groter of kleiner dan 14 meter (Figuur 15)
-ggplot(Trilling_def, aes(x=Vcur, y=R0031_VTOP, color = Issmall)) + geom_point(size =2, shape = 3) + 
-   xlab("Trilsnelheid Volgens de CUR 166 model") + ylab("Gemeten top snelheid") +
-  geom_abline(slope = 1, color = "deeppink3", size = 1.3)  + geom_smooth(method = "lm", se = F) +
+ggplot() +
+  geom_point(aes(x=Trilling_def$Vcur, y=Trilling_def$R0031_VTOP, color = Trilling_def$Issmall), size = 2, shape = 3) + xlab("Trilsnelheid Volgens de CUR 166 model") + ylab("Gemeten top snelheid") + 
+  geom_abline(slope = 1, color = "deeppink3", size = 1.3)  + ylab("Gemeten top snelheid") +
   theme_light() +  xlim(0, 11) + ylim(0, 11) +
-  scale_color_discrete(labels=c("Damwand langer dan 14 m.", "Damwand korter dan 14 m.")) + theme(
+  scale_color_discrete(labels=c("Damwand langer dan 14 m.", "Damwand korter dan 14 m."))+
+  theme(
     legend.background = element_rect(fill = "transparent"), 
     legend.box.background = element_rect(fill = "transparent"), 
     legend.position = c(0.72, 0.15),
@@ -300,6 +306,7 @@ Trilling_def %>% group_by(Waarheid) %>% summarise(aantal = n())
 
 # CUR 95 categorische evaluatie
 Trilling_95$Grens <- Trilling_95$Frequentie_Trilblok * 0.1 / 60 + 1
+#Trilling_95$Grens <- Trilling_95$Frequentie_Trilblok * 0.25 / 60 + 2.5
 Trilling_95$Overschrijding <- Trilling_95$Grens < Trilling_95$R0031_VTOP
 Trilling_95$CUR_Overschrijding <- Trilling_95$Grens < Trilling_95$Vcur
 Trilling_95$Overschrijding2 <- ifelse(Trilling_95$CUR_Overschrijding, "Positive", "Negative")

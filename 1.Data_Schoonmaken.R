@@ -9,7 +9,7 @@
 # Programeur: Marwan el Morabet; Contact: marwanelmorabet@gmail.com
 
 #### De juiste working directory keuze
-setwd("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Geobrain Eind/Data en Scripts")
+setwd("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Geobrain")
 
 ### Programmeer libraries inladen
 library(dplyr)
@@ -20,22 +20,22 @@ library(xlsx)
 #### Inladen van de data ####
 
 # Trillingsdata inladen
-Constructie <- read.csv("Trillingdata3.csv", 
+Constructie <- read.csv("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Data/Trillingdata3.csv", 
                         sep=";", stringsAsFactors=FALSE)
 
 # Informatie over locatie van projectsondering inladen
-Sondering_location <- read.csv("Admin_data.csv", stringsAsFactors=FALSE) %>%
+Sondering_location <- read.csv("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Data/Fred/Admin_data.csv", stringsAsFactors=FALSE) %>%
   select(SONDNR, X_CRD, Y_CRD, MV_mm, MAXDEPTH_mm)
 
 # Projectsondering inladen
-Sondering <- read.csv("Output_data.csv", stringsAsFactors=FALSE)
+Sondering <- read.csv("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Data/Fred/Output_data.csv", stringsAsFactors=FALSE)
 
 # Extra DINO loket sonderingen inladen
 Sondering <- read_delim("DINO.csv", ";", escape_double = FALSE, trim_ws = TRUE) %>%
   bind_rows(Sondering)
 
 # Locatiegegevens van DINO lokeet sonderingen inladen
-DINO_locatie <- read.csv2("DINO_location.csv", stringsAsFactors=FALSE) %>%
+DINO_locatie <- read.csv2("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Geobrain/DINO_location.csv", stringsAsFactors=FALSE) %>%
   select(SONDNR, X_CRD, Y_CRD, MV_mm, MAXDEPTH_mm) %>%
   mutate(MV_mm = MV_mm * 1000, MAXDEPTH_mm = MAXDEPTH_mm * 1000)
 
@@ -132,7 +132,7 @@ Trilling_def2 <- Trilling_Join %>% left_join(Sondering, by="SONDNR") %>%
 Trilling_def2$R0717_IS_OVERSCHRIJDINGEN <- as.factor(Trilling_def2$R0717_IS_OVERSCHRIJDINGEN)
 
 # Maatgevende bodemprofiel inladen
-Bodemprofiel_Classificatie <- read_delim("Bodemprofiel Classificatie.csv", 
+Bodemprofiel_Classificatie <- read_delim("C:/Users/morabet/OneDrive - Stichting Deltares/Desktop/Data/Bodemprofiel Classificatie.csv", 
                                          ";", escape_double = FALSE, trim_ws = TRUE)
 
 # Combineren met de data
