@@ -8,6 +8,8 @@ making predictions.
 My research can be divided into two parts:
 1. Performing an empirical evaluation on the accuracy and the safety of the CUR-166 model.
 2. Creating a new model with the use of machine learning.
+
+
 My thesis was the first time that the CUR-166 model was empirically evaluated on a large data set. In
 my research I concluded that the existing model was inaccurate and should not be used in the
 vibration prediction process.
